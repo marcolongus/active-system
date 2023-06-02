@@ -68,7 +68,9 @@ particle create_particle(void){
 			velocity = -active_velocity*log(1. - dis(gen));
 			break;
 		case(1):
-			velocity = pow(dis(gen)*( pow(v_max, 1- k_powerl) - pow(v_min,1-k_powerl))+pow(v_min,1-k_powerl), 1./(1.-k_powerl));
+			velocity = pow(dis(gen) * (pow(v_max, 1 - k_powerl) - 
+				pow(v_min, 1 - k_powerl)) 						+ 
+				pow(v_min, 1 - k_powerl), 1. / (1. - k_powerl));
 			break;
 		default:
 			velocity = active_velocity;
