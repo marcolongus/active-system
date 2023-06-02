@@ -2,8 +2,8 @@
 #define KIND float  
 
 //Parametros principales:
-const size_t N = 15000; //Cantidad de agentes.
-const KIND   L = 475; //Largo del sistema. Area = L*L.
+const size_t N = 100; //Cantidad de agentes.
+const KIND   L = 50; //Largo del sistema. Area = L*L.
 
 //Parametros de evolución del sistema.
 //Pre-condición para estos parámetros (dt * v < 0.1):
@@ -12,7 +12,7 @@ const KIND active_velocity = 0.1; //Velocidad de las partículas cuando no inter
 
 //0 -> dist. exponencial, 1 -> dist. power law. Cualquier otro dist. uniforme.
 const int velocity_distribution = -1;
-const KIND delta=600; // wave profile change
+const KIND delta=600; // angle of refraction border
 
 //Condición inicial SIR
 const KIND   p_init  = 0.001, //Infectadas iniciales.

@@ -206,7 +206,6 @@ particle evolution(vector<particle> &system, vector<int> &index, bool inter){
 	}
 	else {p_rot=p_rotation;}
 
-
 	inter = false;
 	if (inter) {
 		vector<KIND> field, potencial;
