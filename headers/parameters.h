@@ -7,8 +7,9 @@ const KIND   L = 50; //Largo del sistema. Area = L*L.
 
 //Parametros de evolución del sistema.
 //Pre-condición para estos parámetros (dt * v < 0.1):
+const KIND active_velocity = 0.1; 
 const KIND delta_time      = 0.05;
-const KIND active_velocity = 0.1; //Velocidad de las partículas cuando no interactúan.
+const KIND sqrt_dt 		   = sqrt(delta_time);
 
 //0 -> dist. exponencial, 1 -> dist. power law. Cualquier otro dist. uniforme.
 const int velocity_distribution = -1;
@@ -29,9 +30,12 @@ const KIND  tau_t = 10  , p_transmision = (1/tau_t) * delta_time, //sane---->inf
 			tau_i = 200, p_infection   = (1/tau_i) * delta_time, //infected--->refractary
 			tau_r = 500, p_recfractary = (1/tau_r) * delta_time; //refractary--->sane
 
+//Pre-condición para tumbling (dt * 1/alpha < 1) -> ask Gustavo this
 const KIND alpha = 10, p_rotation    = (1/alpha) * delta_time; // tumbling rates angle_1 -> angle_2
 const KIND alpha_s = 1, p_rotation_s = (1/alpha_s) * delta_time; // tumbling rate seconde part angle_1 -> angle_2
 
+// Diff. Noise
+const KIND eta = sqrt(2/alpha);
 
  /* Para distribución power-law hay que fitear las constantes */
 // 1.7713537054317126, //  v=0.1

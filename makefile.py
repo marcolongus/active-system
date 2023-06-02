@@ -7,7 +7,7 @@ os.system('color')
 #compilacion = "gcc -o agentes_test agentes.cpp -lstdc++ -O3 -march=native -fopenmp"
 compiler   = "gcc -o "
 target     = "main "
-program    = "agentes.cpp "
+program    = "main.cpp "
 flags      = "-lstdc++ -lm " # -Wall " #-Werrors
 opt_flags  = "-O3 -march=native -fopenmp "
 

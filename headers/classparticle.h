@@ -5,19 +5,20 @@ using namespace std;
 mt19937::result_type seed = time(0);
 mt19937 gen(seed);                             //Standard mersenne_twister_engine seeded time(0)
 uniform_real_distribution<KIND> dis(0., 1.); // dis(gen), número aleatorio real entre 0 y 1.
+normal_distribution<KIND> norm(0., 1.);
 
-/*Definimos la clase partículas y sus métodos */
-/*Memoria que ocupa cada miembro de la clase: 4 doubbles (32 Bytes) + 1 int (4 Bytes) = 36 Bytes*/
-
-
-/***************************************************************************************/
+//==================================================================================//
+/* Definimos la clase partículas y sus métodos */
+/* Memoria que ocupa cada miembro de la clase: */
+/* 4 doubles (32 Bytes) + 1 int (4 Bytes) = 36 Bytes*/
+//==================================================================================//
 class particle{
 	private:
 		// Estado interno del agente.
 		int state;
 	public:
 		// Estado dinámico del agente.
-		KIND x,y;
+		KIND x, y;
 		KIND velocity;
 		KIND angle;
 
@@ -37,8 +38,7 @@ class particle{
 	void set_refractary() {state = 2;}
 };
 
-
-/* Constructor de partícula genérica*/
+/* Constructor de partícula genérica */
 particle::particle(){
 	velocity = 0;
 	angle    = 0;
@@ -53,13 +53,8 @@ particle::particle(KIND x1, KIND y1, KIND vel, KIND ang){
 	x        = x1;
 	y        = y1;
 }
-/***************************************************************************************/
 
-
-/**
- * [Create a prticle in a random point (x, p, s) in the phase-state]
- * @return  [particle]
- */
+//==================================================================================//
 particle create_particle(void){
 	KIND x, y, velocity, angle;
 
@@ -67,7 +62,7 @@ particle create_particle(void){
 	y     = dis(gen)*L;
 	angle = dis(gen)*dos_Pi;
 
-	//Tres distribuciones para asiganar la velocidad al azar:
+	// Exponential, power law and uniform distributions f(v)
 	switch(velocity_distribution){
 		case(0):
 			velocity = -active_velocity*log(1. - dis(gen));
@@ -79,25 +74,21 @@ particle create_particle(void){
 			velocity = active_velocity;
 			break;
 	}
-	//Creación de la partícula:
+	
+	// Creación de la partícula:
 	particle A(x, y, velocity, angle);
-	//Setting del estado interno de la partícula:
-
-	//if   (dis(gen) < p_init){ A.set_infected();} //Agrega un porcentaje p_init de partículas infectadas.
 	
 	// Init condition
-	//if    ((pow(A.x - (L/2), 2) + pow(A.y - (L/2), 2)) <= 100)  { A.set_infected();} //wave radial
-	if  (((L/5 - 20) < A.x) and (A.x < L/5)) A.set_infected(); // wave lineal.
-	
-	else A.set_healthy();
-	// Agrega un pocentaje p_rinit de partículas en estado refractario.
-	// No reasigna una previamente infectada.
-	// if (dis(gen) < p_rinit and !A.is_infected() ){ A.set_refractary();}
+	if  (((L/5 - 10) < A.x) and (A.x < L/5)) { 
+		A.set_infected();
+	} else {
+		A.set_healthy();
+	}
 	return A;
 }
-
-
-/*FUNCIONES AUXILIARES PARA LA CLASE*/
+//==================================================================================//
+/* Class Functions */
+//==================================================================================//
 /*Real boundary condition  and integer boundary condition functions*/
 KIND b_condition(KIND a){
     return fmod((fmod(a,L)+L),L);
@@ -107,12 +98,6 @@ int my_mod(int a, int b){
 	return ((a%b)+b)%b;
 }
 
-/**
- * [Distance between particles in a topological torus]
- * @param  A [particle]
- * @param  B [particle]
- * @return   [KIND distance between A and B]
- */
 KIND distance(particle A, particle B){
         KIND x1,x2,y1,y2,res;
         res = infinity;
@@ -125,12 +110,6 @@ KIND distance(particle A, particle B){
         return sqrt(res);
 }
 
-/**
- * [distance_x difference between coordinates of two particles]
- * @param  A [particle]
- * @param  B [particle]
- * @return   [KIND]
- */
 KIND distance_x(particle A, particle B){
 		KIND x1, x2, res;
 		int j = 0;
@@ -146,19 +125,12 @@ KIND distance_x(particle A, particle B){
 			if (abs(dx[i+1]) < res ){
 				res = abs(dx[i+1]);
 				j = i;
-			} //if
-		}//for
+			} // if
+		} // for
 		return dx[j+1];
 }
 
 
-
-/**
- * [distance_y same as distance_x]
- * @param  A [particle]
- * @param  B [particle]
- * @return   [KIND]
- */
 KIND distance_y(particle A, particle B){
 		KIND y1, y2, res;
 		int j = 0;
@@ -175,7 +147,7 @@ KIND distance_y(particle A, particle B){
 				res = abs(dy[i+1]);
 				j = i;
 			} //if
-		}//for
+		} // for
 		return dy[j+1];
 }
 
@@ -188,59 +160,27 @@ bool interact(particle A, particle B){
 	return (distance(A,B) < diameter);
 } //repensar esta función
 
-
-
-
-/*INTERACTION FUNCTIONS*/
-/* Evolution time step function of the particle */
+//==================================================================================//
+/* Time Step Evolution Function */
+//==================================================================================//
 particle evolution(vector<particle> &system, vector<int> &index, bool inter){
 	particle Agent = system[index[0]];
 	KIND p_rot=0;
 	
-	/* DINÁMICA ESPACIAL DEL SISTEMA*/
-	//if (Agent.x >= L/2 + 30) {p_rot=p_rotation_s;} 
-	//else {p_rot = p_rotation;}
-	
+	/* Dinámica espacial*/	
 	if ( (Agent.x >= L/4) and (Agent.y <=  L / delta * (Agent.x - L / 4))) {
 		p_rot=p_rotation_s;
+	} else {
+		p_rot=p_rotation;
 	}
-	else {p_rot=p_rotation;}
 
-	inter = false;
-	if (inter) {
-		vector<KIND> field, potencial;
-		field.resize(2); potencial.resize(2,0); //inicia vector tamaño 2 en 0.
-
-		for(size_t i=1; i < index.size(); i++){
-			KIND   dx_0i = distance_x(system[index[0]], system[index[i]]),
-				   dy_0i = distance_y(system[index[0]], system[index[i]]),
-				   d_0i  = distance1(dx_0i, dy_0i);
-			potencial[0] += pow(d_0i,-3)*dx_0i;
-			potencial[1] += pow(d_0i,-3)*dy_0i;
-
-		} // for
-		
-	    for(size_t i=0; i<potencial.size(); i++) potencial[i] = gamma_friction*potencial[i];
-
-    	field[0] = system[index[0]].velocity*cos(system[index[0]].angle) + potencial[0];
-    	field[1] = system[index[0]].velocity*sin(system[index[0]].angle) + potencial[1];
-
-		Agent.x = b_condition(Agent.x + delta_time*field[0]);
-		Agent.y = b_condition(Agent.y + delta_time*field[1]);
-	} // if
-    
-    else {
-		Agent.x = b_condition(Agent.x + Agent.velocity*cos(Agent.angle)*delta_time);
-		Agent.y = b_condition(Agent.y + Agent.velocity*sin(Agent.angle)*delta_time);
-	} // else
-
-	/* El agente cambia de dirección en A.angle +/- pi/2 */
+	/* Persistent Random Walk */
 	if (dis(gen) < p_rot) {
-		// KIND ruido = (dis(gen)-0.5)*Pi; 
-		KIND ruido = dis(gen) * 2 * Pi; // Run & Tumble
-		Agent.angle += ruido;
+		Agent.angle += eta *  dis(gen) * sqrt_dt ;
 	}
 
+	Agent.x = b_condition(Agent.x + Agent.velocity * cos(Agent.angle) * delta_time);
+	Agent.y = b_condition(Agent.y + Agent.velocity * sin(Agent.angle) * delta_time);
 
 	// Reflective walls:
 	if (Agent.x > L-1 and cos(Agent.angle) > 0) Agent.angle = Pi - Agent.angle ;
@@ -250,19 +190,16 @@ particle evolution(vector<particle> &system, vector<int> &index, bool inter){
 	if (Agent.y < 1 and sin(Agent.angle) < 0) Agent.angle = - Agent.angle;
 
 
-    /* DINÁMICA DE LA EPIDEMIA */
+    /* Epidemic Dynamic - SI*/
 	bool flag = true; // Flag de infección.
-	for (size_t i=1; i<index.size(); i++){
-		if (Agent.is_healthy() && system[index[i]].is_infected()){
-			if (dis(gen) < p_transmision){
+	for (size_t i=1; i<index.size(); i++) {
+		if (Agent.is_healthy() && system[index[i]].is_infected()) {
+			if (dis(gen) < p_transmision) {
 				Agent.set_infected();
 				flag = false; // No puede volverse refractaria en esta instancia de evolución.
 			}
 		}
-	}//for
-    //if (Agent.is_refractary() && (dis(gen) < p_recfractary) ) Agent.set_healthy(); //SIRS
-    //if (Agent.is_infected() && flag && (dis(gen) < p_infection) ) Agent.set_refractary();
+	}
     return Agent;
 }
-/***************************************************************************************/
 
