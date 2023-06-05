@@ -78,19 +78,19 @@ update_system(  vector<particle>            &system      ,
 				refract++;
 					break;
 			}
-		}//for p
+		} // for p (particles)
 
 		state_vector = {healthy, infected, refract};
 		
 		//Animacion:
-		if (animation and TimeStep % anim_step == 0){
-			for(size_t p=0; p < N; p++){
+		if (animation and TimeStep % anim_step == 0) {
+			for(size_t p=0; p < N; p++) {
 				anim << system_new[p].x           << " ";
 				anim << system_new[p].y           << " ";
-				anim << TimeStep*delta_time       << " ";
+				anim << TimeStep * delta_time     << " ";
 				anim << system_new[p].get_state() << endl;
 			}
-		}//if animacion
+		} // if animacion
 		
 		/*Estabilzamos el set*/
 		for(size_t p=0; p<N; p++){
@@ -169,13 +169,15 @@ void print_finalstate_tofile(ofstream       &file,
 
 void print_simulation_parameters(ofstream &file)
 {
-	file << "L             = " << L << endl;
-	file << "N             = " << N << endl;
-	file << "dt            = " << delta_time << endl;
-	file << "active_vel    = " << active_velocity << endl;
-	file << "Vel Distribut = " << velocity_distribution << endl;
-	file << "tau Rotation  = " << alpha << endl;
-	file << "tau_t         = " << tau_t << endl;
-	file << "tau_i         = " << tau_i << endl;
-	file << "tau_r         = " << tau_r << endl;
+	file << "L              = " << L 					 << endl;
+	file << "N              = " << N 					 << endl;
+	file << "dt             = " << delta_time 			 << endl;
+	file << "active_vel     = " << active_velocity 		 << endl;
+	file << "Vel Distribut  = " << velocity_distribution << endl;
+	file << "tau Rotation   = " << alpha 				 << endl;
+	file << "tau_t          = " << tau_t 				 << endl;
+	file << "tau_i          = " << tau_i 				 << endl;
+	file << "tau_r          = " << tau_r 				 << endl;
+	file << "Anim time_step = " << anim_step*delta_time  << endl;
+	file << "Simulation Seed= " << seed				     << endl;
 }

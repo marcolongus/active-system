@@ -11,6 +11,9 @@ const KIND active_velocity = 0.1;
 const KIND delta_time      = 0.05;
 const KIND sqrt_dt 		   = sqrt(delta_time);
 
+const bool animation = true;
+const int  anim_step = 10;
+
 //0 -> dist. exponencial, 1 -> dist. power law. Cualquier otro dist. uniforme.
 const int velocity_distribution = -1;
 const KIND delta=600; // angle of refraction border
@@ -22,8 +25,6 @@ const KIND   p_init  = 0.001, //Infectadas iniciales.
 
 const int spin = 3; //Estados internos.
 
-const bool animation = true;
-const int  anim_step = 100;
 
 /*Tiempos característicos y probabilidades por unidad de tiempo*/
 const KIND  tau_t = 10  , p_transmision = (1/tau_t) * delta_time, //sane---->infected

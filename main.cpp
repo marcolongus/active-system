@@ -53,6 +53,7 @@ int main(void) {
 
 	/* SIMULACION */
 	gen.seed(seed);
+	cout << "Simulation Seed: " << seed << endl;
 	for (size_t n_simulaciones = 0; n_simulaciones < 1; n_simulaciones++) {
 		print_header(n_simulaciones);
 		/* DECLARACIÓN DE VARIABLES */
@@ -81,6 +82,7 @@ int main(void) {
 		while (state_vector[1] < N) {
 			CHECK(time_step, (int)2e01) print_epidemic_tofile(epidemic, state_vector, time_step);
 			CHECK(time_step, (int)2e04) printf("Time: %0.f\n", TIME(time_step, delta_time));
+			
 			time_step++;
 
 			update_system(system, system_new, state_vector, grid, inter, time_step, anim);

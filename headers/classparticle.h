@@ -2,10 +2,13 @@
 using namespace std;
 
 //Generador de números aleatorios en (0,1).
-mt19937::result_type seed = time(0);
+
+//unsigned seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+
+mt19937::result_type seed = chrono::high_resolution_clock::now().time_since_epoch().count();
 mt19937 gen(seed);                             //Standard mersenne_twister_engine seeded time(0)
 uniform_real_distribution<KIND> dis(0., 1.); // dis(gen), número aleatorio real entre 0 y 1.
-normal_distribution<KIND> norm(0., 1.);
+normal_distribution<KIND> norm_dist(0., 1.);
 
 //==================================================================================//
 /* Definimos la clase partículas y sus métodos */
@@ -177,10 +180,9 @@ particle evolution(vector<particle> &system, vector<int> &index, bool inter){
 	}
 
 	/* Persistent Random Walk */
-	if (dis(gen) < p_rot) {
-		Agent.angle += eta *  dis(gen) * sqrt_dt ;
-	}
+	if (dis(gen) < p_rot) Agent.angle += eta *  norm_dist(gen) * sqrt_dt ;
 
+	
 	Agent.x = b_condition(Agent.x + Agent.velocity * cos(Agent.angle) * delta_time);
 	Agent.y = b_condition(Agent.y + Agent.velocity * sin(Agent.angle) * delta_time);
 
