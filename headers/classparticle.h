@@ -2,9 +2,6 @@
 using namespace std;
 
 //Generador de números aleatorios en (0,1).
-
-//unsigned seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-
 mt19937::result_type seed = chrono::high_resolution_clock::now().time_since_epoch().count();
 mt19937 gen(seed);                             //Standard mersenne_twister_engine seeded time(0)
 uniform_real_distribution<KIND> dis(0., 1.); // dis(gen), número aleatorio real entre 0 y 1.
@@ -170,18 +167,19 @@ bool interact(particle A, particle B){
 //==================================================================================//
 particle evolution(vector<particle> &system, vector<int> &index, bool inter){
 	particle Agent = system[index[0]];
-	KIND p_rot=0;
+	KIND p_rot=0, eta_rot=0;
 	
 	/* Dinámica espacial*/	
 	if ( (Agent.x >= L/4) and (Agent.y <=  L / delta * (Agent.x - L / 4))) {
-		p_rot=p_rotation_s;
+		p_rot = p_rotation_s;
+		eta_rot = eta_s; 
 	} else {
 		p_rot=p_rotation;
+		eta_rot = eta;
 	}
 
 	/* Persistent Random Walk */
-	if (dis(gen) < p_rot) Agent.angle += eta *  norm_dist(gen) * sqrt_dt ;
-
+	if (dis(gen) < p_rot) Agent.angle += eta_rot *  norm_dist(gen) * sqrt_dt ;
 	
 	Agent.x = b_condition(Agent.x + Agent.velocity * cos(Agent.angle) * delta_time);
 	Agent.y = b_condition(Agent.y + Agent.velocity * sin(Agent.angle) * delta_time);
