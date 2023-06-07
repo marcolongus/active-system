@@ -169,30 +169,32 @@ particle evolution(vector<particle> &system, vector<int> &index, bool inter){
 	particle Agent = system[index[0]];
 	KIND p_rot=0, eta_rot=0;
 	
-	/* Dinámica espacial*/	
-	if ( (Agent.x >= L/4) and (Agent.y <=  L / delta * (Agent.x - L / 4))) {
+	/* SPATIAL DYNAMIC */	
+	if ((Agent.x >= L / 4) and (Agent.y <=  (L / delta) * (Agent.x - L / 4))) {
 		p_rot = p_rotation_s;
 		eta_rot = eta_s; 
 	} else {
-		p_rot=p_rotation;
+		p_rot = p_rotation;
 		eta_rot = eta;
 	}
 
-	/* Persistent Random Walk */
-	if (dis(gen) < p_rot) Agent.angle += eta_rot *  norm_dist(gen) * sqrt_dt ;
+	/* PERSISTENT RANDOM WALK */
+	if (dis(gen) < p_rot) {
+		Agent.angle += eta_rot *  norm_dist(gen) * sqrt_dt;
+	}
 	
 	Agent.x = b_condition(Agent.x + Agent.velocity * cos(Agent.angle) * delta_time);
 	Agent.y = b_condition(Agent.y + Agent.velocity * sin(Agent.angle) * delta_time);
 
 	// Reflective walls:
-	if (Agent.x > L-1 and cos(Agent.angle) > 0) Agent.angle = Pi - Agent.angle ;
+	if (Agent.x > L - 1 and cos(Agent.angle) > 0) Agent.angle = Pi - Agent.angle ;
 	if (Agent.x < 1 and cos(Agent.angle) < 0) Agent.angle = Pi - Agent.angle;
 
-	if (Agent.y > L-1 and sin(Agent.angle) > 0) Agent.angle =  - Agent.angle;
+	if (Agent.y > L - 1 and sin(Agent.angle) > 0) Agent.angle =  - Agent.angle;
 	if (Agent.y < 1 and sin(Agent.angle) < 0) Agent.angle = - Agent.angle;
 
 
-    /* Epidemic Dynamic - SI*/
+    /* EPIDEMIC DYNAMIC - SI*/
 	bool flag = true; // Flag de infección.
 	for (size_t i=1; i<index.size(); i++) {
 		if (Agent.is_healthy() && system[index[i]].is_infected()) {
