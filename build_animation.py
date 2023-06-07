@@ -8,10 +8,11 @@ import concurrent.futures
 colores = ["blue", "red", "green"]
 archivo = "data/animacion.txt"
 
-N = 1
-L = 150
+N = 15_000
+L = 475
+
+delta = 100
 np_steps = 30_000
-delta = 20
 
 print(f"Angle: {np.arctan(L/delta) * 180 / np.pi}")
 
@@ -34,7 +35,7 @@ def generate_data(start_frame, num_frames):
 
 def update(num, x, y, estado, fig, ax):
 
-    # ax.cla()
+    ax.cla()
     ax.set_xlabel("x coordinate")
     ax.set_ylabel("y coordinate")
     ax.axis("square")
@@ -44,25 +45,26 @@ def update(num, x, y, estado, fig, ax):
 
     # Refraction wall
     ax.plot(x_r, y_r(x_r), color="black", linestyle="dashed")
-    ax.plot(x_r, y_r(x_r - 20), color="black", linestyle="dashed")
-    ax.plot(x_r, y_r(x_r - 10), color="black", linestyle="dashed")
+    ax.plot(x_r, y_r(x_r - 200), color="black", linestyle="dashed")
+    ax.plot(x_r, y_r(x_r - 100), color="black", linestyle="dashed")
 
     # Perpendiccular to refraction wall
     ax.plot(x_r, y_perp(x_r), color="black", linestyle="dashed")
-    ax.plot(x_r, y_perp(x_r) + 20, color="black", linestyle="dashed")
-    ax.plot(x_r, y_perp(x_r) + 10, color="black", linestyle="dashed")
+    ax.plot(x_r, y_perp(x_r) + 200, color="black", linestyle="dashed")
+    ax.plot(x_r, y_perp(x_r) + 100, color="black", linestyle="dashed")
 
     for j in range(N):
-        # disk = patches.Circle((x[j], y[j]), 1, alpha=0.7, fc=colores[estado[j]])
-        disk = patches.Circle((x, y), 1, alpha=0.7, fc=colores[estado])
+        disk = patches.Circle((x[j], y[j]), 1, alpha=0.7, fc=colores[estado[j]])
+        #disk = patches.Circle((x, y), 1, alpha=0.7, fc=colores[estado])
         ax.add_patch(disk)
 
-    fig.savefig(f"pic{num}.png", dpi=100)
+    fig.savefig(f"video/pic{num}.png", dpi=100)
+
 
 
 if __name__ == "__main__":
 
-    parallel = False
+    parallel = True
 
     if parallel:
         from multiprocessing import freeze_support
@@ -70,6 +72,7 @@ if __name__ == "__main__":
         freeze_support()
 
         fig, ax = plt.subplots()
+        results = []
         with concurrent.futures.ProcessPoolExecutor() as executor:
             for num, x, y, estado in generate_data(0, np_steps):
                 results.append(executor.submit(update, num, x, y, estado, fig, ax))

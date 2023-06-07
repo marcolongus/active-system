@@ -2,21 +2,21 @@
 #define KIND float  
 
 //Parametros principales:
-const size_t N = 1; //Cantidad de agentes.
-const KIND   L = 150; //Largo del sistema. Area = L*L.
+const size_t N = 15000; //Cantidad de agentes.
+const KIND   L = 475; //Largo del sistema. Area = L*L.
 
 //Parametros de evolución del sistema.
 //Pre-condición para estos parámetros (dt * v < 0.1):
-const KIND active_velocity = 0.1; 
+const KIND active_velocity = 0.05; 
 const KIND delta_time      = 0.05;
 const KIND sqrt_dt 		   = sqrt(delta_time);
 
 const bool animation = true;
-const int  anim_step = 100;
+const int  anim_step = 3000;
 
 //0 -> dist. exponencial, 1 -> dist. power law. Cualquier otro dist. uniforme.
 const int velocity_distribution = -1;
-const KIND delta=20; // angle of refraction border
+const KIND delta=100; // angle of refraction border
 
 //Condición inicial SIR
 const KIND   p_init  = 0.001, //Infectadas iniciales.
@@ -27,17 +27,17 @@ const int spin = 3; //Estados internos.
 
 
 /*Tiempos característicos y probabilidades por unidad de tiempo*/
-const KIND  tau_t = 10  , p_transmision = (1/tau_t) * delta_time, //sane---->infected
-			tau_i = 200, p_infection   = (1/tau_i) * delta_time, //infected--->refractary
-			tau_r = 500, p_recfractary = (1/tau_r) * delta_time; //refractary--->sane
+const KIND  tau_t = 10 , p_transmision = (1 / tau_t) * delta_time, //sane---->infected
+			tau_i = 200, p_infection   = (1 / tau_i) * delta_time, //infected--->refractary
+			tau_r = 500, p_recfractary = (1 / tau_r) * delta_time; //refractary--->sane
 
 //Pre-condición para tumbling (dt * 1/alpha < 1) -> ask Gustavo this
-const KIND alpha = 100, p_rotation    = (1/alpha) * delta_time; // tumbling rates angle_1 -> angle_2
-const KIND alpha_s = 1, p_rotation_s = (1/alpha_s) * delta_time; // tumbling rate seconde part angle_1 -> angle_2
+const KIND alpha = 1, p_rotation    = (1 / alpha) * delta_time; // tumbling rates angle_1 -> angle_2
+const KIND alpha_s = 10, p_rotation_s = (1 / alpha_s) * delta_time; // tumbling rate seconde part angle_1 -> angle_2
 
 // Diff. Noise
-const KIND eta = sqrt(2./alpha);
-const KIND eta_s = sqrt(2./alpha_s);
+const KIND eta = sqrt(2. / alpha);
+const KIND eta_s = sqrt(2. / alpha_s);
 
  /* Para distribución power-law hay que fitear las constantes */
 // 1.7713537054317126, //  v=0.1
@@ -51,13 +51,13 @@ const KIND  k_powerl = 2.09600,
 
 //Constantes:
 const KIND  Pi       = 3.14159265358979323846,
-			dos_Pi   = 2*Pi,
+			dos_Pi   = 2 * Pi,
 			infinity = 1000000000;
 
 //Características geométricas de agentes.
 const KIND  radio    = 1.,
-			diameter = 2.*radio;
+			diameter = 2. * radio;
 
 //Características del medio en el que se mueven los agentes.
 const KIND beta           = 1;                    //comentario sobre qué representa.
-const KIND gamma_friction = 3.92*active_velocity; //transforma: vel -> fuerza.
+const KIND gamma_friction = 3.92 * active_velocity; //transforma: vel -> fuerza.
