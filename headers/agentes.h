@@ -169,15 +169,16 @@ void print_finalstate_tofile(ofstream       &file,
 
 void print_simulation_parameters(ofstream &file)
 {
-	file << "L              = " << L 					 << endl;
-	file << "N              = " << N 					 << endl;
-	file << "dt             = " << delta_time 			 << endl;
-	file << "active_vel     = " << active_velocity 		 << endl;
-	file << "Vel Distribut  = " << velocity_distribution << endl;
-	file << "tau Rotation   = " << alpha 				 << endl;
-	file << "tau_t          = " << tau_t 				 << endl;
-	file << "tau_i          = " << tau_i 				 << endl;
-	file << "tau_r          = " << tau_r 				 << endl;
-	file << "Anim time_step = " << anim_step*delta_time  << endl;
-	file << "Simulation Seed= " << seed				     << endl;
+	file << "L               = " << L 					  << endl;
+	file << "N               = " << N 					  << endl;
+	file << "dt              = " << delta_time 			  << endl;
+	file << "active_vel      = " << active_velocity 	  << endl;
+	file << "Vel Distribut   = " << velocity_distribution << endl;
+	file << "tau Rotation L  = " << alpha 				  << endl;
+	file << "tau Rotation R  = " << alpha_s               << endl;
+	file << "tau_t           = " << tau_t 				  << endl;
+	file << "tau_i           = " << tau_i 				  << endl;
+	file << "tau_r           = " << tau_r 				  << endl;
+	file << "Anim time_step  = " << anim_step*delta_time  << endl;
+	file << "Simulation Seed = " << seed				  << endl;
 }

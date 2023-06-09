@@ -8,13 +8,13 @@ import concurrent.futures
 colores = ["blue", "red", "green"]
 archivo = "data/animacion.txt"
 
-N = 15_000
+N = 10_000
 L = 475
 
 delta = 100
 np_steps = 30_000
 
-print(f"Angle: {np.arctan(L/delta) * 180 / np.pi}")
+print(f"Angle: {np.arctan(L / delta) * 180 / np.pi}.")
 
 animation_step = np.loadtxt(archivo, usecols=2, max_rows=1)
 

@@ -2,7 +2,7 @@
 #define KIND float  
 
 //Parametros principales:
-const size_t N = 15000; //Cantidad de agentes.
+const size_t N = 10000; //Cantidad de agentes.
 const KIND   L = 475; //Largo del sistema. Area = L*L.
 
 //Parametros de evolución del sistema.
@@ -16,7 +16,7 @@ const int  anim_step = 3000;
 
 //0 -> dist. exponencial, 1 -> dist. power law. Cualquier otro dist. uniforme.
 const int velocity_distribution = -1;
-const KIND delta=100; // angle of refraction border
+const KIND delta = 100; // angle of refraction border
 
 //Condición inicial SIR
 const KIND   p_init  = 0.001, //Infectadas iniciales.
@@ -32,8 +32,8 @@ const KIND  tau_t = 10 , p_transmision = (1 / tau_t) * delta_time, //sane---->in
 			tau_r = 500, p_recfractary = (1 / tau_r) * delta_time; //refractary--->sane
 
 //Pre-condición para tumbling (dt * 1/alpha < 1) -> ask Gustavo this
-const KIND alpha = 1, p_rotation    = (1 / alpha) * delta_time; // tumbling rates angle_1 -> angle_2
-const KIND alpha_s = 10, p_rotation_s = (1 / alpha_s) * delta_time; // tumbling rate seconde part angle_1 -> angle_2
+const KIND alpha = 100, p_rotation    = (1 / alpha) * delta_time; // tumbling rates angle_1 -> angle_2
+const KIND alpha_s = 1, p_rotation_s = (1 / alpha_s) * delta_time; // tumbling rate seconde part angle_1 -> angle_2
 
 // Diff. Noise
 const KIND eta = sqrt(2. / alpha);
